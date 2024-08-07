@@ -2,7 +2,7 @@
   "name": "@needem/currency",
   "version": "0.0.1",
   "description": "Currency formating using Intl",
-  "main": "index.js",
+  "main": "src/index.mjs",
   "scripts": {
     "test": "node --test"
   },
