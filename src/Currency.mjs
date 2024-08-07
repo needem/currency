@@ -1,0 +1,143 @@
+import Ajv from 'ajv'
+import { Formatter } from './Formatter.mjs'
+
+export class Currency {
+
+	#formatters = {}
+
+	#activeFormatter
+
+	#ajv
+
+	constructor() {
+		this.#ajv = new Ajv()
+	}
+
+	format(value, config) {
+		if(Object.keys(this.#formatters).length === 0) {
+			throw new Error('no formatters found')
+		}
+
+		let name = this.#activeFormatter
+		if(config) {
+			name = config.name || this.#activeFormatter
+			delete config.name
+		}
+
+		const formatter = this.#formatters[name]
+
+		if(!formatter) {
+			throw new Error('invalid formatter')
+		}
+
+		return formatter.format(value, config)
+	}
+
+	/**
+	 * Add a new currency.
+	 * 
+	 * @param {object}  config
+	 * @param [string]  config.name 	 A name to use as an alias for currency. 
+	 *	  							     If not defined locale will be used.
+	 * @param [string]  config.locale    Locale to use (default: en)
+	 * @param [string]  config.iso       Currency iso to use (default: usd)
+	 * @param [string]  config.display   Display style to use (default: narrow)
+	 * @param [boolean] config.fromCents Does value has cents included (default: false)
+	 */
+ 	add(config = { 
+		locale: 'en',
+		iso: 'usd' 
+	}) {
+		const name = config.name || config.locale
+
+		if(this.#formatters[name]) {
+			return this.#formatters[name]
+		}
+
+		delete config.name
+
+		const formatter = Formatter.create(config)
+
+		this.#formatters[name] = formatter
+
+		this.#activeFormatter = name
+
+		return formatter
+	}
+
+	use(name) {
+		if(!this.#formatters[name]) {
+			throw new Error('invalid formatter')
+		}
+
+		this.#activeFormatter = name
+
+		return this
+	}
+
+	/**
+	 * Initialize currency instance
+	 * 
+	 * @param {object}   config
+	 * @param [string]   config.default
+	 * @param {object[]} config.configs
+	 * @param [string]   config.configs[].name
+	 * @param {string}   config.configs[].locale
+	 * @param {string}   config.configs[].iso
+	 * @param [boolean]  config.configs[].fromCents
+	 */
+	init(config) {
+		const valid = this.#ajv.validate(INIT_CONFIG, config)
+		if(!valid) {
+			throw this.#ajv.errors[0]
+		}
+
+		for(const conf of config.configs) {
+			this.add(conf)
+		}
+
+		if(config.default) {
+			this.use(config.default)
+		}
+	}
+
+	clear() {
+		this.#formatters = {}
+		this.#activeFormatter = undefined
+	}
+
+}
+
+
+const INIT_CONFIG = {
+	type: 'object',
+	properties: {
+		default: {
+			type: 'string'
+		},
+		configs: {
+			type: 'array',
+			items: {
+				type: 'object',
+				properties: {
+					name: {
+						type: 'string'
+					},
+					locale: {
+						type: 'string'
+					},
+					iso: {
+						type: 'string'
+					},
+					fromCents: {
+						type: 'boolean'
+					}
+				},
+				required: ['locale', 'iso'],
+				additionalProperties: false
+			},
+			minItems: 1
+		}
+	},
+	additionalProperties: false
+}

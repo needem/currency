@@ -1,0 +1,7 @@
+node_modules
+.env.*
+*-debug.log
+build
+.npm
+.idea
+.dist

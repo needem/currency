@@ -1,0 +1,14 @@
+{
+  "name": "@needem/currency",
+  "version": "0.0.1",
+  "description": "Currency formating using Intl",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --test"
+  },
+  "author": "gsuntres@pm.me",
+  "license": "MIT",
+  "dependencies": {
+    "ajv": "^8.17.1"
+  }
+}
