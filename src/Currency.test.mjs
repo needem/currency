@@ -117,4 +117,31 @@ describe('Currency', () => {
         assert.equal(c.format(1599), '15,99 €')
     })
 
+
+    it('should format to parts', () => {
+        c.init({
+            configs: [{
+                locale: 'fr',
+                iso: 'eur',
+                fromCents: true
+            }]
+        })
+
+        assert.deepEqual(c.formatToParts(1004522), [{ 
+            type: 'integer', value: '10' 
+        }, { 
+            type: 'group', value: ' ' 
+        }, { 
+            type: 'integer', value: '045' 
+        }, { 
+            type: 'decimal', value: ',' 
+        }, { 
+            type: 'fraction', value: '22' 
+        }, { 
+            type: 'literal', value: ' ' 
+        }, { 
+            type: 'currency', value: '€' 
+        }])
+    })
+
 })

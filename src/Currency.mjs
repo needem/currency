@@ -11,6 +11,8 @@ export class Currency {
 
 	constructor() {
 		this.#ajv = new Ajv()
+
+		this.init = this.init.bind(this)
 	}
 
 	format(value, config) {
@@ -31,6 +33,26 @@ export class Currency {
 		}
 
 		return formatter.format(value, config)
+	}
+
+	formatToParts(value, config) {
+		if(Object.keys(this.#formatters).length === 0) {
+			throw new Error('no formatters found')
+		}
+
+		let name = this.#activeFormatter
+		if(config) {
+			name = config.name || this.#activeFormatter
+			delete config.name
+		}
+
+		const formatter = this.#formatters[name]
+
+		if(!formatter) {
+			throw new Error('invalid formatter')
+		}
+
+		return formatter.formatToParts(value, config)
 	}
 
 	/**
@@ -79,12 +101,12 @@ export class Currency {
 	 * Initialize currency instance
 	 * 
 	 * @param {object}   config
-	 * @param [string]   config.default
+	 * @param [string]   config.default (default: last language in the list)
 	 * @param {object[]} config.configs
 	 * @param [string]   config.configs[].name
 	 * @param {string}   config.configs[].locale
 	 * @param {string}   config.configs[].iso
-	 * @param [boolean]  config.configs[].fromCents
+	 * @param [boolean]  config.configs[].fromCents (default: false)
 	 */
 	init(config) {
 		const valid = this.#ajv.validate(INIT_CONFIG, config)
@@ -98,6 +120,9 @@ export class Currency {
 
 		if(config.default) {
 			this.use(config.default)
+		} else {
+			const lastConfig = config.configs[config.configs.length - 1]
+			this.use(lastConfig.name || lastConfig.locale)
 		}
 	}
 

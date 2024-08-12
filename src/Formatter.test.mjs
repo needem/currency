@@ -75,4 +75,28 @@ describe('Formatter', () => {
 
     	assert.equal(fa.format(10022), '‎ریال ۱۰٬۰۲۲')
     })
+
+    it('should format to parts', () => {
+        const fr = Formatter.create({
+            locale: 'fr',
+            iso: 'eur',
+            fromCents: true
+        })
+
+        assert.deepEqual(fr.formatToParts(1004522), [{ 
+            type: 'integer', value: '10' 
+        }, { 
+            type: 'group', value: ' ' 
+        }, { 
+            type: 'integer', value: '045' 
+        }, { 
+            type: 'decimal', value: ',' 
+        }, { 
+            type: 'fraction', value: '22' 
+        }, { 
+            type: 'literal', value: ' ' 
+        }, { 
+            type: 'currency', value: '€' 
+        }])
+    })
 })

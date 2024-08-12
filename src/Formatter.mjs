@@ -55,6 +55,26 @@ export class Formatter {
 		}
 	}
 
+	formatToParts(value, config) {
+		const valid = this.#validate(value, { 
+			type: 'number',
+			multipleOf : 1
+		})
+
+		let actual = this.#actual
+		if(config) {
+			const newConfig = Object.assign({}, this.config, config)
+			
+			let v = newConfig.fromCents ? value / 100 : value
+			
+			return this.#createActual(newConfig).formatToParts(v)
+		} else {
+			let v = this.#fromCents ? value / 100 : value
+
+			return this.#actual.formatToParts(v)
+		}
+	}
+
 	#createActual(config) {
 		this.#validate(config)
 
