@@ -1,6 +1,6 @@
 ## Currency formatter based on Intl.NumberFormat
 
-```@needme/currency``` offers a convenient way to format currencies using multiple configuration.
+```@needme/currency``` offers a convenient way to format currencies using multiple configurations.
 
 *Install*
 ```bash
@@ -20,9 +20,9 @@ console.log(currency.format(100.99))
 // should display $100.00
 ```
 
-You can configure multiple formatter in one go by using the ```init``` function.
+You can configure multiple formatters in one go by using the ```init``` function.
 
-Choose which one should be used with the ```use``` function.
+Choose which one to use with the ```use``` function.
 
 
 *Initialize with multiple locales*
