@@ -6,6 +6,11 @@
   "scripts": {
     "test": "node --test"
   },
+  "files": [
+    "src/**/*.mjs",
+    "README.md",
+    "LICENSE"
+  ],
   "author": "gsuntres@pm.me",
   "license": "MIT",
   "dependencies": {
