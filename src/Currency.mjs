@@ -130,7 +130,6 @@ export class Currency {
 		this.#formatters = {}
 		this.#activeFormatter = undefined
 	}
-
 }
 
 

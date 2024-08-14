@@ -117,7 +117,6 @@ describe('Currency', () => {
         assert.equal(c.format(1599), '15,99 €')
     })
 
-
     it('should format to parts', () => {
         c.init({
             configs: [{

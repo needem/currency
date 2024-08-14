@@ -36,9 +36,9 @@ export class Formatter {
 	}
 
 	format(value, config) {
-		const valid = this.#validate(value, { 
+		this.#validate(value, { 
 			type: 'number',
-			multipleOf : 1
+			multipleOf : this.#fromCents ? 1 : 0.01
 		})
 
 		let actual = this.#actual

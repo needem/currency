@@ -28,6 +28,16 @@ describe('Formatter', () => {
     	assert.equal(f.format(1500), '$1,500.00')
     })
 
+    it('should format decimal values', () => {
+        const f = Formatter.create({ 
+            locale: 'en',
+            iso: 'usd',
+            fromCents: false
+        })
+
+        assert.equal(f.format(100.99), '$100.99')
+    })
+
     it('should format value from cents', () => {
     	const f = Formatter.create({ 
     		locale: 'en',
@@ -42,6 +52,12 @@ describe('Formatter', () => {
     })
 
     it('should throw when not integer', () => {
+        const f = Formatter.create({ 
+            locale: 'en',
+            iso: 'usd',
+            fromCents: true 
+        })
+
     	assert.throws(() => { f.format(0.1000) }, { message: 'must be multiple of 1' })
     })
 
