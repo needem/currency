@@ -75,6 +75,10 @@ export class Formatter {
 		}
 	}
 
+	toString() {
+		return this.#locale
+	}
+
 	#createActual(config) {
 		this.#validate(config)
 

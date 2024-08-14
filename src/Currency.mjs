@@ -97,6 +97,20 @@ export class Currency {
 		return this
 	}
 
+	current() {
+		if(Object.keys(this.#formatters).length === 0) {
+			throw new Error('no formatters found')
+		}
+
+		const formatter = this.#formatters[this.#activeFormatter]
+
+		if(!formatter) {
+			throw new Error('invalid formatter')
+		}
+
+		return formatter
+	}
+
 	/**
 	 * Initialize currency instance
 	 * 

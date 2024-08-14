@@ -3,6 +3,7 @@ import { it } from 'node:test'
 import { before } from 'node:test'
 import assert from 'node:assert/strict'
 import { Currency } from './Currency.mjs'
+import { Formatter } from './Formatter.mjs'
 
 describe('Currency', () => {
     
@@ -141,6 +142,27 @@ describe('Currency', () => {
         }, { 
             type: 'currency', value: '€' 
         }])
+    })
+
+    it('should get current', () => {
+        c.init({
+            configs: [{
+                name: 'mx',
+                locale: 'es-MX',
+                iso: 'mxv'
+            }, {
+                locale: 'el',
+                iso: 'eur',
+                fromCents: true
+            }, {
+                locale: 'fr',
+                iso: 'eur',
+                fromCents: true
+            }]
+        })
+
+        assert.ok(c.current() instanceof Formatter)
+        assert.equal(''+c.current(), 'fr')
     })
 
 })
