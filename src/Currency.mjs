@@ -53,7 +53,7 @@ export class Currency {
 		if(!formatter) {
 			throw new Error('invalid formatter')
 		}
-		console.log(finalValue)
+		
 		return formatter.format(finalValue, finalConfig)
 	}
 
