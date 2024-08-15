@@ -7,12 +7,15 @@ export class Currency {
 
 	#activeFormatter
 
+	#flash
+
 	#ajv
 
 	constructor() {
 		this.#ajv = new Ajv()
 
 		this.init = this.init.bind(this)
+		this.use = this.use.bind(this)
 	}
 
 	format(value, config) {
@@ -21,8 +24,18 @@ export class Currency {
 		}
 
 		let name = this.#activeFormatter
+
+		if(this.#flash) {
+			name = this.#flash
+
+			this.#flash = undefined
+		}
+
 		if(config) {
-			name = config.name || this.#activeFormatter
+			if(config.name) {
+				name = config.name
+			}
+
 			delete config.name
 		}
 
@@ -41,8 +54,18 @@ export class Currency {
 		}
 
 		let name = this.#activeFormatter
+		
+		if(this.#flash) {
+			name = this.#flash
+
+			this.#flash = undefined
+		}
+
 		if(config) {
-			name = config.name || this.#activeFormatter
+			if(config.name) {
+				name = config.name
+			}
+
 			delete config.name
 		}
 
@@ -84,7 +107,7 @@ export class Currency {
 
 		this.#activeFormatter = name
 
-		return formatter
+		return this
 	}
 
 	use(name) {
@@ -109,6 +132,16 @@ export class Currency {
 		}
 
 		return formatter
+	}
+
+	flash(name) {
+		if(!this.#formatters[name]) {
+			throw new Error('invalid formatter')
+		}
+
+		this.#flash = name
+
+		return this
 	}
 
 	/**
@@ -165,6 +198,9 @@ const INIT_CONFIG = {
 						type: 'string'
 					},
 					iso: {
+						type: 'string'
+					},
+					display: {
 						type: 'string'
 					},
 					fromCents: {

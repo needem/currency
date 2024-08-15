@@ -5,6 +5,8 @@ import assert from 'node:assert/strict'
 import { Currency } from './Currency.mjs'
 import { Formatter } from './Formatter.mjs'
 
+const now = new Date('2024-05-21T20:49:14.423Z')
+
 describe('Currency', () => {
     
     let c
@@ -95,7 +97,7 @@ describe('Currency', () => {
         })
     })
 
-    it('should init', () => {
+    it('should flash', () => {
         c.init({
             configs: [{
                 name: 'mx',
@@ -112,9 +114,33 @@ describe('Currency', () => {
             }]
         })
 
+        assert.equal(c.flash('mx').format(1599.00), 'MXV 1,599.00')
+        assert.equal(c.format(159900), '1 599,00 €')
+    })
+
+    it('should switch to a different formatter', () => {
+        c.init({ configs: SAMPLE_INIT })
+        
+        assert.equal(c.format(1000), '10,00 €')
+        
+        c.use('mx')
+        assert.equal(c.format(3000.66), 'MXV 3,000.66')
+        assert.equal(c.format(3020.66), 'MXV 3,020.66')
+    })
+
+    it('should init', () => {
+        c.init({ 
+            default: 'fr',
+            configs: SAMPLE_INIT 
+        })
+
         assert.equal(c.format(1599), '15,99 €')
+    })
+
+    it('should switch formatter on the fly', () => {
+        c.init({ configs: SAMPLE_INIT })
+
         assert.equal(c.format(1599, { name: 'mx' }), 'MXV 1,599.00')
-        c.use('el')
         assert.equal(c.format(1599), '15,99 €')
     })
 
@@ -166,3 +192,17 @@ describe('Currency', () => {
     })
 
 })
+
+const SAMPLE_INIT = [{
+    name: 'mx',
+    locale: 'es-MX',
+    iso: 'mxv'
+}, {
+    locale: 'el',
+    iso: 'eur',
+    fromCents: true
+}, {
+    locale: 'fr',
+    iso: 'eur',
+    fromCents: true
+}]
