@@ -23,7 +23,7 @@ describe('Currency', () => {
     it('should add currency', () => {
         c.add({
             locale: 'es-MX',
-            iso: 'mxv'
+            currency: 'mxv'
         })
 
         assert.equal(c.format(12345), 'MXV 12,345.00')
@@ -33,13 +33,13 @@ describe('Currency', () => {
         c.add({
             name: 'mx',
             locale: 'es-MX',
-            iso: 'mxv'
+            currency: 'mxv'
         })
 
         c.add({
             name: 'no',
             locale: 'no-NO',
-            iso: 'nok'
+            currency: 'nok'
         })
 
         assert.equal(c.format(111000, { name: 'mx' }), 'MXV 111,000.00')
@@ -48,17 +48,43 @@ describe('Currency', () => {
     it('should format with cents', () => {
         c.add({
             locale: 'el',
-            iso: 'eur',
+            currency: 'eur',
             fromCents: true
         })
 
         assert.equal(c.format(15989), '159,89 €')
     })
 
+    it('should format object values', () => {
+        c.add({
+            locale: 'el',
+            currency: 'eur',
+            fromCents: true
+        })
+
+        assert.equal(c.format({
+            value: 15989,
+            currency: 'usd'
+        }), '159,89 $')
+    })
+
+    it('should format object values (force currency override)', () => {
+        c.add({
+            locale: 'el',
+            currency: 'eur',
+            fromCents: true
+        })
+
+        assert.equal(c.format({
+            value: 15989,
+            currency: 'usd'
+        }, { currency: 'mxd' }), '159,89 MXD')
+    })
+
     it('should override with cents', () => {
         c.add({
             locale: 'el',
-            iso: 'eur',
+            currency: 'eur',
             fromCents: true
         })
 
@@ -68,7 +94,7 @@ describe('Currency', () => {
     it('should clear instance', () => {
         c.add({
             locale: 'el',
-            iso: 'eur',
+            currency: 'eur',
             fromCents: true
         })
 
@@ -82,7 +108,7 @@ describe('Currency', () => {
     it('should throw on unknown formatter on format', () => {
         c.add({
             locale: 'el',
-            iso: 'eur',
+            currency: 'eur',
             fromCents: true
         })
 
@@ -102,14 +128,14 @@ describe('Currency', () => {
             configs: [{
                 name: 'mx',
                 locale: 'es-MX',
-                iso: 'mxv'
+                currency: 'mxv'
             }, {
                 locale: 'el',
-                iso: 'eur',
+                currency: 'eur',
                 fromCents: true
             }, {
                 locale: 'fr',
-                iso: 'eur',
+                currency: 'eur',
                 fromCents: true
             }]
         })
@@ -148,7 +174,7 @@ describe('Currency', () => {
         c.init({
             configs: [{
                 locale: 'fr',
-                iso: 'eur',
+                currency: 'eur',
                 fromCents: true
             }]
         })
@@ -175,14 +201,14 @@ describe('Currency', () => {
             configs: [{
                 name: 'mx',
                 locale: 'es-MX',
-                iso: 'mxv'
+                currency: 'mxv'
             }, {
                 locale: 'el',
-                iso: 'eur',
+                currency: 'eur',
                 fromCents: true
             }, {
                 locale: 'fr',
-                iso: 'eur',
+                currency: 'eur',
                 fromCents: true
             }]
         })
@@ -196,13 +222,13 @@ describe('Currency', () => {
 const SAMPLE_INIT = [{
     name: 'mx',
     locale: 'es-MX',
-    iso: 'mxv'
+    currency: 'mxv'
 }, {
     locale: 'el',
-    iso: 'eur',
+    currency: 'eur',
     fromCents: true
 }, {
     locale: 'fr',
-    iso: 'eur',
+    currency: 'eur',
     fromCents: true
 }]

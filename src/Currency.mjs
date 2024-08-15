@@ -19,6 +19,18 @@ export class Currency {
 	}
 
 	format(value, config) {
+		const finalConfig = Object.assign({}, config || {})
+
+		let finalValue
+		if(typeof value === 'number') {
+			finalValue = value
+		} else if(typeof value === 'object' && value.value && value.currency) {
+			finalValue = value.value
+			finalConfig.currency = config?.currency || value.currency
+		} else {
+			throw new Error('invalid value')
+		}
+
 		if(Object.keys(this.#formatters).length === 0) {
 			throw new Error('no formatters found')
 		}
@@ -31,12 +43,9 @@ export class Currency {
 			this.#flash = undefined
 		}
 
-		if(config) {
-			if(config.name) {
-				name = config.name
-			}
-
-			delete config.name
+		if(finalConfig.name) {
+			name = finalConfig.name
+			delete finalConfig.name
 		}
 
 		const formatter = this.#formatters[name]
@@ -44,11 +53,21 @@ export class Currency {
 		if(!formatter) {
 			throw new Error('invalid formatter')
 		}
-
-		return formatter.format(value, config)
+		console.log(finalValue)
+		return formatter.format(finalValue, finalConfig)
 	}
 
 	formatToParts(value, config) {
+		const finalConfig = Object.assign({}, config || {})
+
+		let finalValue
+		if(typeof value === 'number') {
+			finalValue = value
+		} else if(typeof value === 'object' && value.value && value.currency) {
+			finalValue = value.value
+			finalConfig.currency = value.currency
+		}
+
 		if(Object.keys(this.#formatters).length === 0) {
 			throw new Error('no formatters found')
 		}
@@ -61,12 +80,9 @@ export class Currency {
 			this.#flash = undefined
 		}
 
-		if(config) {
-			if(config.name) {
-				name = config.name
-			}
-
-			delete config.name
+		if(finalConfig.name) {
+			name = finalConfig.name
+			delete finalConfig.name
 		}
 
 		const formatter = this.#formatters[name]
@@ -75,7 +91,7 @@ export class Currency {
 			throw new Error('invalid formatter')
 		}
 
-		return formatter.formatToParts(value, config)
+		return formatter.formatToParts(finalValue, finalConfig)
 	}
 
 	/**
@@ -85,13 +101,13 @@ export class Currency {
 	 * @param [string]  config.name 	 A name to use as an alias for currency. 
 	 *	  							     If not defined locale will be used.
 	 * @param [string]  config.locale    Locale to use (default: en)
-	 * @param [string]  config.iso       Currency iso to use (default: usd)
+	 * @param [string]  config.currency       Currency currency to use (default: usd)
 	 * @param [string]  config.display   Display style to use (default: narrow)
 	 * @param [boolean] config.fromCents Does value has cents included (default: false)
 	 */
  	add(config = { 
 		locale: 'en',
-		iso: 'usd' 
+		currency: 'usd' 
 	}) {
 		const name = config.name || config.locale
 
@@ -152,7 +168,7 @@ export class Currency {
 	 * @param {object[]} config.configs
 	 * @param [string]   config.configs[].name
 	 * @param {string}   config.configs[].locale
-	 * @param {string}   config.configs[].iso
+	 * @param {string}   config.configs[].currency
 	 * @param [boolean]  config.configs[].fromCents (default: false)
 	 */
 	init(config) {
@@ -197,7 +213,7 @@ const INIT_CONFIG = {
 					locale: {
 						type: 'string'
 					},
-					iso: {
+					currency: {
 						type: 'string'
 					},
 					display: {
@@ -207,7 +223,7 @@ const INIT_CONFIG = {
 						type: 'boolean'
 					}
 				},
-				required: ['locale', 'iso'],
+				required: ['locale', 'currency'],
 				additionalProperties: false
 			},
 			minItems: 1

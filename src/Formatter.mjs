@@ -6,7 +6,7 @@ export class Formatter {
 
 	#locale
 
-	#iso
+	#currency
 
 	#display
 
@@ -20,13 +20,13 @@ export class Formatter {
 		this.#validate(config)
 
 		this.#locale = config.locale
-		this.#iso = config.iso
+		this.#currency = config.currency
 		this.#display = config.display || 'narrow'
 		this.#fromCents = config.fromCents || false
 
 		this.#actual = this.#createActual({
 			locale: this.#locale,
-			iso: this.#iso,
+			currency: this.#currency,
 			display: this.#display
 		})
 	}
@@ -93,7 +93,7 @@ export class Formatter {
 
 		return new Intl.NumberFormat(config.locale, {
 			style: 'currency',
-			currency: config.iso,
+			currency: config.currency,
 			currencyDisplay
 		})
 	}
@@ -108,7 +108,7 @@ export class Formatter {
 	get config() {
 		return {
 			locale: this.#locale,
-			iso: this.#iso,
+			currency: this.#currency,
 			display: this.#display,
 			fromCents: this.#fromCents
 		}
@@ -122,7 +122,7 @@ const CONFIG = {
 		locale: {
 			type: 'string'
 		},
-		iso: {
+		currency: {
 			type: 'string'
 		},
 		display: {
@@ -132,6 +132,6 @@ const CONFIG = {
 			type: 'boolean'
 		}
 	},
-	required: ['locale', 'iso'],
+	required: ['locale', 'currency'],
 	additionalProperties: false
 }

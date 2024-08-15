@@ -11,14 +11,14 @@ describe('Formatter', () => {
     before(async () => {
         f = Formatter.create({
         	locale: 'en',
-        	iso: 'usd'
+        	currency: 'usd'
         })
     })
 
     it('should create default formatter', () => {
         assert.deepEqual(f.config, { 
         	locale: 'en', 
-        	iso: 'usd', 
+        	currency: 'usd', 
         	display: 'narrow' ,
         	fromCents: false
         })
@@ -31,7 +31,7 @@ describe('Formatter', () => {
     it('should format decimal values', () => {
         const f = Formatter.create({ 
             locale: 'en',
-            iso: 'usd',
+            currency: 'usd',
             fromCents: false
         })
 
@@ -41,7 +41,7 @@ describe('Formatter', () => {
     it('should format value from cents', () => {
     	const f = Formatter.create({ 
     		locale: 'en',
-    		iso: 'usd',
+    		currency: 'usd',
     		fromCents: true 
     	})
     	assert.equal(f.format(1599), '$15.99')
@@ -54,7 +54,7 @@ describe('Formatter', () => {
     it('should throw when not integer', () => {
         const f = Formatter.create({ 
             locale: 'en',
-            iso: 'usd',
+            currency: 'usd',
             fromCents: true 
         })
 
@@ -68,7 +68,7 @@ describe('Formatter', () => {
     it('should display decimal with comma', () => {
     	const fr = Formatter.create({
     		locale: 'fr',
-    		iso: 'eur'
+    		currency: 'eur'
     	})
 
     	assert.equal(fr.format(1500), '1 500,00 €')
@@ -77,7 +77,7 @@ describe('Formatter', () => {
     it('should display decimal with dot', () => {
     	const fr = Formatter.create({
     		locale: 'en',
-    		iso: 'eur'
+    		currency: 'eur'
     	})
 
     	assert.equal(fr.format(1500), '€1,500.00')
@@ -86,7 +86,7 @@ describe('Formatter', () => {
     it('culturally diverse', () => {
     	const fa = Formatter.create({
     		locale: 'fa',
-    		iso: 'irr'
+    		currency: 'irr'
     	})
 
     	assert.equal(fa.format(10022), '‎ریال ۱۰٬۰۲۲')
@@ -95,7 +95,7 @@ describe('Formatter', () => {
     it('should format to parts', () => {
         const fr = Formatter.create({
             locale: 'fr',
-            iso: 'eur',
+            currency: 'eur',
             fromCents: true
         })
 
