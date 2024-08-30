@@ -27,6 +27,8 @@ export class Currency {
 		} else if(typeof value === 'object' && value.value && value.currency) {
 			finalValue = value.value
 			finalConfig.currency = config?.currency || value.currency
+		} else if(typeof value === 'undefined') {
+			return undefined
 		} else {
 			throw new Error('invalid value')
 		}
