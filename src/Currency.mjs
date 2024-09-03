@@ -27,7 +27,7 @@ export class Currency {
 		} else if(typeof value === 'object' && value.value && value.currency) {
 			finalValue = value.value
 			finalConfig.currency = config?.currency || value.currency
-		} else if(typeof value === 'undefined') {
+		} else if(!Number.isFinite(value)) {
 			return undefined
 		} else {
 			throw new Error('invalid value')
@@ -68,6 +68,10 @@ export class Currency {
 		} else if(typeof value === 'object' && value.value && value.currency) {
 			finalValue = value.value
 			finalConfig.currency = value.currency
+		} else if(!Number.isFinite(value)) {
+			return undefined
+		} else {
+			throw new Error('invalid value')
 		}
 
 		if(Object.keys(this.#formatters).length === 0) {
